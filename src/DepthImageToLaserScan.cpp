@@ -142,9 +142,11 @@ sensor_msgs::msg::LaserScan::UniquePtr DepthImageToLaserScan::convert_msg(
   scan_msg->range_min = range_min_;
   scan_msg->range_max = range_max_;
 
-  // Check scan_height vs image_height
-  if (static_cast<double>(scan_height_) / 2.0 > cam_model_.cy() ||
-    static_cast<double>(scan_height_) / 2.0 > depth_msg->height - cam_model_.cy())
+  // Check scan_height and offset_height vs image_height
+  if ((static_cast<double>(scan_height_) / 2.0) + static_cast<double>(offset_height_) >
+    cam_model_.cy() ||
+    (static_cast<double>(scan_height_) / 2.0) + static_cast<double>(offset_height_) >
+    depth_msg->height - cam_model_.cy())
   {
     std::stringstream ss;
     ss << "scan_height ( " << scan_height_ << " pixels) is too large for the image height.";
